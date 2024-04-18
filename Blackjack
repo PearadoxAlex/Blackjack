@@ -1,0 +1,84 @@
+import random
+
+insults = ["Is that really the best you can do?", "My grandma can do better than that.", "You're going to lose the next match. Prove me wrong.", "99% of gamblers quit before they win.", "Thou art garbage.", "You're so broke that if Elon Musk gave you all his money you'd still be broke.", "geek", "You got a one on the AP Gambling exam. Loser."]
+
+def setbalance():
+    try:
+        return int(input("How much money do you start with? Should be more than 10." + "\n"))
+    except:
+        print("Please type an integer.")
+        return setbalance()
+
+
+def bet():
+    try:
+        return max(10, min(balance + 10, int(input("How much would you like to bet? No betting less than 10." + "\n"))))
+    except:
+        print("Please type an integer.")
+        return bet()
+
+balance = setbalance()
+
+print("Balance: " + str(balance))
+
+while True:
+    betnum = bet()
+    print("You have bet: " + str(betnum))
+    score = 0
+    sgamble1 = min(random.randint(1, 13), 10)
+    sgamble2 = min(random.randint(1, 13), 10)
+    print("You first card is a: " + str(sgamble1))
+    print("And your second card is a: " + str(sgamble2))
+    score += sgamble1 + sgamble2
+    print("For a total of: " + str(score))
+    pbroke = False
+
+    cscore = 0
+    cgamble1 = min(random.randint(1, 13), 10)
+    cgamble2 = min(random.randint(1, 13), 10)
+    print("The computer has a: " + str(cgamble1))
+    cscore += cgamble1 + cgamble2
+    cbroke = False
+
+    print("Player score: " + str(score))
+    while True:
+        if(input("Hit or pass (h) or (p)" + "\n") == "h"):
+            pcard = min(random.randint(1, 13), 10)
+            print("You drew a: " + str(pcard))
+            score += pcard
+            print("For a total score of: " + str(score))
+            if(score > 21):
+                print("You broke")
+                balance -= betnum
+                pbroke = True
+                break
+        else:
+            break
+    print("Player score: " + str(score))
+
+    if(not(pbroke)):
+        print("The computer had a: " + str(cgamble2))
+        print("For a total score of: " + str(cscore))
+        while True:
+            if(cscore < score):
+                ccard = min(min(random.randint(1, 13), 10), 21 - cscore)
+                print("The computer draws a: " + str(ccard))
+                cscore += ccard
+                print("For a total score of: " + str(cscore))
+                if(cscore > 21):
+                    print("The computer broke")
+                    balance += betnum
+                    cbroke = True
+                    break
+            else:
+                break
+    if(not(pbroke) and not(cbroke)):
+        if(score > cscore):
+            print("You win")
+            balance += betnum
+        else:
+            print("The computer wins")
+            balance -= betnum
+    print("Balance: " + str(balance))
+    print(insults[random.randint(0, len(insults) - 1)])
+    print("\n")
